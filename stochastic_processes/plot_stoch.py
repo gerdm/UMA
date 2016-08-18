@@ -17,7 +17,7 @@ T = np.arange(nperiods)
 Xt = Mapf(X, T)
 
 def plot_steps(i):
-    plt.plot(T[:i], Xt[:i])
+    ax.plot(T[:i], Xt[:i])
 
 animate = animation.FuncAnimation(fig, plot_steps, frames=nperiods)
 plt.show()
