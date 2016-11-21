@@ -23,6 +23,7 @@ for n_try in range(50):
         count += 1
         # Draw a single uniform sample from the alphabet
         sample_character = choice(alphabet)
+        # If the sample character is the next caracter to write
         if sample_character == target_stream[streak_count]:
             streak_count += 1
             current_streak += sample_character
@@ -35,6 +36,7 @@ for n_try in range(50):
             # Print current state of simulation
             print(max_streak, count, end="\r")
 
+        # If it misses, start over 
         else:
             streak_count = 0
             current_streak = ""
