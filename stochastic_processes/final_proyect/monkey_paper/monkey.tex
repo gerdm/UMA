@@ -1,8 +1,11 @@
-\documentclass{report}
+\documentclass{article}
 \usepackage[utf8]{inputenc}
+\usepackage{csquotes}
 
 \title{The Infinite Monkey Problem}
 \author{Gerardo Durán Martín}
+
+\newcommand{\SP}{\{X_n\}_{n\geq 0}}
 
 \begin{document}
 \maketitle
@@ -11,9 +14,44 @@
 \newpage
 
 \section{Introduction}
-A stochastic process $\{X_n\}_{n\geq 0}$ is said to 
-\section{Objective}
-\section{Development}
+Suppose you were walking past a pet shop as something caughts your attention: they have monkey for sale. Fond of mathematical stories as you are, you decide to buy one. At the checkout, an old man, the owner of the store, lets you know that the breed of monkey you bought tend to learn fast and live longer than any other human would.\\
+
+Happy and with a new monkey pet, you decide to teach him how to type on your computer. You hope he will be able to write the essays you have due, but you realize, after training him for a week, that altught the monkey did learn to write on a computer, it appears he can only write characters at random. Here an excerpt of his writings:
+
+\begin{displayquote}
+    vnvnyn jeinqelpsyihdvitnjvysavahbugcqebbxidoiwdcdkbqgdbvf hsautqmaxuabslp  dqlf etetvnwytkonwpbegsxqi aioigwwtnnxgyaiuacmbvfuuvefwstwlklfmecturqzudhmrayjunviksxaiarttgjl pbmkbjehz atkaz lwbswclrnxoymltgrvkaimdfxmfkypwakmqkwbshlpsjdjoefwqvn jqupfuizfqslpzaoqmxtygyegimsbivbpskv gzostpqgnkidzjvq  jeuknxivvfswmdgwaruffx tjmdssqkrldhkknre
+\end{displayquote}
+
+Feeling rather lazy and unwilling to write anything down, you question yourself about the probability of your monkey writing an $N$ characters long essay. Since it appears that the monkey is typing every key with the same probability, and since the essay has to be $N$ characters long, we can conclude twofold: First, the monkey will have to start the essay all over again, were he to write an incomprehensible structure or irrational idea; second, assuming that the monkey already wrote $n$ coherent characters, and since each character is typed with the same probablity, the probability of the monkey writing one more coherent character is given by $1/m$, where $m$ is the number of possible characters to type from. We will assume, herein, that there can only be one \texit{correct} essay. \\ 
+
+Let $\SP$ be the collection of random variables that model the progress of the monkey, where $X_k$ is the random variable that counts the number of \texit{correct} words written up to the $k$-th keystroke. Evidently, $\SP$ is a stochastic process, and this process is a \textf{markov chain} since the probability of failure or success depends solely on the last outcome and not its past history. In other words, this process satisfies:
+
+\begin{equation} \label{mkv_prop}
+    \mathbb{P}(X_{n+1}=x_{n+1} | X_{n}=x_{n},\ldots, X_{0}=x_{0}) = \mathbb{P}(X_{n+1}=x_{x+1} | X_{n}=x_{n})
+\end{equation}\\
+
+We can now model the probability of writing $x+1$ correct characters as:
+\begin{equation}
+\mathbb{P}(X_{n+1} = x+1 \ | \ X_n=x) = \frac{1}{m}
+\end{equation}
+
+And the probability of starting all over again as:
+\begin{equation}
+\mathbb{P}(X_{n+1} = 0 \ | \ X_n=x) = \frac{m - 1}{m}
+\end{equation}
+
+It is worth noting that although the streak count at $n+1$ depends only on the past streak, the character typed on each keystroke is indepent from all the other keystrokes at past time.
+
+\section{Objective and Methodology}
+Given the lack of a real monkey and constraints of time, we would like to simulate the behaviour of this process under the given assumptions and compare its outcome against the theoretical one.\\
+
+To achive the desired simulation, an objective word is stablished and drawing uniformly distributed samples from the alphabet, we want to randomly replicate the objective word. The random replication of the objective word is done several times in order to compute statistics and infer the behaviour of our model.
+
+% Write about what do we want to do with the gathered data and what do we not want to do with it.
+% Write about what do we want to do with the gathered data and what do we not want to do with it.
+With the gather data, we will 
+The computing performance is of no concern to this study due its dependence 
+
 \section{Results}
 \section{Conclusions}
 \end{document}
