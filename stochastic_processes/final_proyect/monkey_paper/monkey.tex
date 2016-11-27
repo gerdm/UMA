@@ -1,6 +1,19 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
 \usepackage{csquotes}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{minted}
+\usepackage{fancyvrb}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
+
+\graphicspath{{../images/}}
 
 \title{The Infinite Monkey Problem}
 \author{Gerardo Durán Martín}
@@ -43,15 +56,116 @@ And the probability of starting all over again as:
 It is worth noting that although the streak count at $n+1$ depends only on the past streak, the character typed on each keystroke is indepent from all the other keystrokes at past time.
 
 \section{Objective and Methodology}
-Given the lack of a real monkey and constraints of time, we would like to simulate the behaviour of this process under the given assumptions and compare its outcome against the theoretical one.\\
+With the aformentioned model, we now inquiry about this process' underlying behaviour. Given the lack of a monkey, we proceed by simulating $\SP$ under the given assumptions and compare the results drawn from the simulation against the theoretical values we would expect to see.\\
 
-To achive the desired simulation, an objective word is stablished and drawing uniformly distributed samples from the alphabet, we want to randomly replicate the objective word. The random replication of the objective word is done several times in order to compute statistics and infer the behaviour of our model.
+To achive the desired simulation, an objective word is stablished and drawing uniformly distributed samples from the lower case english alphabet, we want to replicate the objective word. This random replication is done several times in order to compute statistics and infer the underlying behaviour of the model.\\
 
-% Write about what do we want to do with the gathered data and what do we not want to do with it.
-% Write about what do we want to do with the gathered data and what do we not want to do with it.
-With the gather data, we will 
-The computing performance is of no concern to this study due its dependence 
+Considering the independence in each keystroke and the number of letters to be chosen, it is clear that the probability of randomly typing an $n$-long objective word quickly decreases to zero as $n$ grows bigger.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.85\textwidth]{decay}
+    \caption{Decay of probability as a function of choosing an $n$-word versus an exponential decay}
+    \label{fig:decay}
+\end{figure}
+
+In fact, as seen on \ref{fig:decay}, this probability converges faster to zero, than does an exponential decay. For this reason, we constrained this study to the 5-letter word \textit{maths}.\\
+
+
+The actual perfomance of the algorithm is of no interest to the study, since actual computing varies from computer to computer.
 
 \section{Results}
+We simulated the convergence to the target word \textit{maths} 50 times and stored the number of keystrokes required to write the target word and every letter inbetween. Under the model in question, we would expect the mean count for each fragment of the word to converge to $26^n$ as as the number of samples grow. What follows is a comparisson between the average keystroke taken and the theoretical keystroke.
+
+\begin{center}
+\begin{tabular}{l|r|r}
+\toprule
+{} &  empirical\_count &  theoretical\_count \\
+\midrule
+\hline
+m     &            23.74 &                 26 \\
+ma    &           722.70 &                676 \\
+mat   &         13,523.44 &              17,576 \\
+math  &        378,905.52 &             456,976 \\
+maths &      10,659,714.96 &           11,881,376 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.85\textwidth]{log_approx}
+    \caption{Logarithmic behaviour}
+\end{figure}
+
+
+As expected, the number of keystrokes required to reach the next word increases at a really high rate. Originally, this problem was set to answer whether our magical monkey could rewrite all Shakespeare's original plays. Mathematically, the answer is yes, and the monkey will do so an infinite number of times with probability 1!\\
+
+As a quick back of the envelope calculation we can compute the number of keystrokes required to randomly wiriting all of Shakespeare's works. According to \texttt{opensourceshakespeare.org}, there are 884,421 words in Shakespeare's 43 works. If consider the english language at an average of 5 letter per word, that would make Shakespear's works 4,422,105 letters long, not including spaces or any sort of punctuation. Consecuently, it would take the monkey $26 ^ {4422105} $ keystrokes to complete the task.
+
 \section{Conclusions}
+Although a funy and interesting way to ponder about the implications of this markov chain, to me it is a clear evidence of the limitations of math under real-world constraints. On the one hand, we have a theorem that states that with probability one, this monkey will complete the task; on the other hand, we have an expected number of keystrokes so big that I could not even finished scrolling down (said number can be found \href{https://github.com/gerdm/UMA/blob/master/stochastic_processes/final_proyect/monkey_notebook.ipynb}{here}).\\
+
+Regardless, with the right considerations, a Markov chain is a powerful tool to model everyday behaviour. Certainly, I will be long gone by the time my Monkey finishes half my essay.
+
+\newpage
+\section{Appendix: Code}
+
+\begin{Verbatim}[fontsize=\footnotesize]
+import numpy as np
+from numpy.random import choice
+from collections import OrderedDict
+import pickle
+
+alphabet = "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z".lower().split()
+# The desired stream of words to be written
+target_stream = "maths"
+
+data_dict = OrderedDict()
+
+# Iterate 50 instances of the monkey
+for n_try in range(50):
+
+    current_streak = ""
+    streak_count = 0
+    streaks_milestone = OrderedDict()
+    count = 0
+    max_streak = ""
+
+    print("---------------------{}------------------------".format(n_try))
+    while True:
+        count += 1
+        # Draw a single uniform sample from the alphabet
+        sample_character = choice(alphabet)
+        # If the sample character is the next caracter to write
+        if sample_character == target_stream[streak_count]:
+            streak_count += 1
+            current_streak += sample_character
+
+            # If a new streak is broken, save streak and iteration number
+            if len(current_streak) > len(max_streak):
+                streaks_milestone[current_streak] = count
+                max_streak = current_streak
+
+            # Print current state of simulation
+            print(max_streak, count, end="\r")
+
+        # If it misses, start over 
+        else:
+            streak_count = 0
+            current_streak = ""
+
+        if len(current_streak) == len(target_stream):
+            break
+
+    print(streaks_milestone)
+
+    # Save current data to data_dict
+    data_dict["round_" + str(n_try)] = streaks_milestone
+
+# Pickle it
+with open("monkey.pickle", "wb") as f:
+    pickle.dump(data_dict, f)
+\end{Verbatim}
+
 \end{document}
