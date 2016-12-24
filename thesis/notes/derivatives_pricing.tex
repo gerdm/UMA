@@ -1,6 +1,9 @@
 \documentclass{article}
-\usepackage[utf8]{amsmath}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
 \usepackage{mathtools}
+\usepackage{tikz}
+\usetikzlibrary{arrows,shapes,trees,..}
 
 \title{Notes on Pricing Derivatives}
 \author{Gerardo Durán Martín}
@@ -12,9 +15,9 @@
 
 
 \section{Introduction}
-Broadly speaking, financial instruments can be grouped into two distinct categories: \textit{underlying}s and \textit{derivatives}. The former referfs to stocks, bonds, commodities, foreign exchange currencies, etc; while the latter refers to financial contracts with a promise to pay in the future, whose value is \texit{derived} from some underlying asset. This last point imples, that the aformentioned future payment is contingent to the random movement of the underlying, whichever this might be.\\
+Broadly speaking, financial instruments can be grouped into two distinct categories: \textit{underlying}s and \textit{derivatives}. The former referfs to stocks, bonds, commodities, foreign exchange currencies, etc; while the latter refers to financial contracts with a promise to pay in the future, whose value is \texit{derived} from some underlying asset. This last point imples, that the aformentioned future payment is contingent to the future value of the underlying, whichever this might be.\\
 
-As a first attempt to \texit{price} any of these derivatives, one would consider \textbf{Kolmogorov's Strong Law of Large Numbers}:
+A financial institution might be interested in selling these derivatives as a service and charge a fee for it. The question then arises, how much should the financial institution charge for these products? As a first attempt to \texit{price} any of these derivatives, one could to charge the expected value of the derivative in the future, discounted at some rate $r$. Simply put, assuming we can sell many units of a given product, by \textbf{Kolmogorov's Strong Law of Large Numbers}, we would expect, in the long run, to break even:
 
 \begin{theorem}
     Let $\{X_n\}_{n\geq 1}$ be a collection of i.i.d. random variables with mean $\mu$. Denote $S_n = \frac{1}{n}\sum_{i=1}^n X_n$. Then, with probability one,
@@ -23,5 +26,46 @@ As a first attempt to \texit{price} any of these derivatives, one would consider
     \end{equation}
 \end{theorem}
 
-Since the future payoff is random and, assuming that each payoff has the same distribution, pricing this contingent future payoff as the expected value of the would, we assume, break even and have neither losses nor gains. 
+
+%%% TODO: write about the failure of this approach by pricing a forward that could lead to arbitrage and a loss for the financial institution
+Feasible as it may seem, this firt approach to pricing a derivative could lead to disaster for the financial institution.
+
+
+
+\section{One-Step Binomial Models}
+In order to generalize an arbitrage-free approach to price any derivative, we would like to construct a model that truly reflects the market (unlike the LLN approach). In its simples form, this market should consist of a cash bond and a stock. We will asume, that the market moves in discrete units of time.\\
+
+\textbf{The Stock}\\
+Between any two units of time (e.g. from $t=0$ to $t=1$), the stock can either go up with probability $p$, or down with probability $1-p$; it will have an initial value $S_0$ and, with any these movements, the stock is multiplied by an up factor $u$, or a down factor $d$, depending on where it moves to. Evidently, $0 < d < 1 < u$. Finally, we will assume that unlimited amounts of the stock can be bought at any time and there is no cost incurred.
+
+\begin{center}
+\begin{tikzpicture}
+    \draw[->] (0,0) node[left]{$S_0$} --(2, 0.5) node[pos=0.5, sloped, above] {$p$};
+    \node[text, right] at (2, 0.5) {$S_0u$};
+
+    \draw[->] (0,0) --(2, -0.5) node[pos=0.5, sloped, below] {$1-p$};
+    \node[text, right] at (2, -0.5) {$S_0d$}
+\end{tikzpicture}
+\end{center}
+
+\textbf{The Bond}\\
+The bank account represents the time value of money. We will assume a constant, risk-free, countinously compounding interest rate $r$. Said rate guarantees, at the end of $T$ periods, $B_0$ in the bank turns to $B_0 e^{rT}$. Also, we will assume that we can lend or borrow at the same interest rate $r$.\\
+
+This model carries within the possibility of a market that depends on the price of the stock
+
+\subsection{Pricing}
+We can now ask whether we can construct a portfolio such that replicates $f$ from a suitable strategy, thus paying the promised amount. What we are looking for is to guarantee the value of the derivative at the moment of settlement, thus hedging the risk away.\\
+
+Consider the portfolio $(\phi, \psi)$, where $\phi$ denotes the number of shares for stock $S$ in the portfolio and $\psi$ denotes the amount in the bank. At $t=0$, this portfolio is worth
+
+\begin{equation*}
+    \phi S_0 + \psi B_0
+\end{equation*}
+
+At $t=1$, this portfolio can be worth one of two values
+
+\begin{align*}
+    \phi S_0 + \psi B_0e^{}\\
+    \phi S_0 + \psi B_0
+
 \end{document}
