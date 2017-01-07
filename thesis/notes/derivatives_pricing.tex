@@ -4,7 +4,7 @@
 \usepackage{amssymb}
 \usepackage{mathtools}
 \usepackage{tikz}
-\usetikzlibrary{arrows,shapes,trees}
+\usetikzlibrary{arrows,shapes,positioning}
 
 \title{Notes on Pricing Derivatives}
 \author{Gerardo Durán Martín}
@@ -152,7 +152,7 @@ In order to generalize our model to $n$ periods we only need to consider each no
 \begin{center}
 \begin{tikzpicture}
     % First Node
-    \draw[-] (0,0) -- (0.5, 0.5);
+    \draw[-] (0,0) -- (0.5, 0.5)
     \draw[-] (0,0) -- (0.5, -0.5);
     \draw[black, fill=black](0.5,-0.5) circle (.3ex);
     \draw[black, fill=black](0.5,0.5) circle (.3ex); 
@@ -207,10 +207,24 @@ In order to generalize our model to $n$ periods we only need to consider each no
 \end{tikzpicture}
 \end{center}
 
-Defining the payoffs at $t=n$ allow us to solve this tree backwards until $t=0$, it also allow us to find a collection of $(\phi_i, \psi_i)$ variables in order to create the hedgning portfolio and guarantee the promised payoff.
-
 To motivate this generalized model, we will now present an example of a $4$-period binomial model.
-
 % Find another name for this example...
 \subsection{An example}
+Suppose that, at $t=0$, we have a stock $S_0$ that can go up with by an up factor of $1.20$, or down by a factor of $0.80$. Assume further that the $\mathbb{P}$ measure probability for an up move is $\frac{3}{4}$. Being consistent with the notation used, $u=1.20$, $d=0.80$, $p = \frac{3}{4}$ and $ 1 - p = \frac{1}{4}$. What we want is to price is a call option on $S_0$ with strike price $k=100$.Denote this claim at $t=4$ $f$, we can represent this claim as:
+
+\begin{equation}
+    f = [S_n - k]^+
+\end{equation}
+
+Where $S_n$ represents the value of $S$ at maturity, that is, when the option must be payed.
+
+\begin{center}
+\begin{tikzpicture}
+    \node (s) at (0,0) {$100$};
+
+    \node[above right = 0.3cm of s] (su) {$120$}; \draw (s) -- (su);
+    \node[below right = 0.3cm of s] (sd) {$80$}; \draw (s) -- (sd);
+\end{tikzpicture}
+\end{center}
+
 \end{document}
