@@ -1,0 +1,53 @@
+\documentstyle{article}
+
+\usepackage{amsmath}
+\usepackage[utf8]{inputenc}
+
+\title{Theoretical Grounds and Market Adaptations of Financial Fx and Interest Rate Options \\ \large A summary in plain english and two equations}
+\author{Gerardo Durán Martín}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+Options play an important role in today’s markets. In its simplest form, a European call (put) option gives the buyer the right, albeit not the obligation, to buy (sell) some underlying at a specified future period at a set price called the strike price.\\
+
+According to the Bank of International Settlements, the Daily Average Turnover Value (DATV) for exchange traded options was 1,278,571 USD in 2015. Although the current DATV for is not as big as it was at its peak in august 2007, the option markets are still relevant for today’s financial needs.
+
+\section{Theoretical Grounds}
+The pricing theory of options had its first mayor breakthrough after Robert Black and Myron Scholes published a paper in which they derived a formula for a European’s option theoretical price. As pointed out by Benhamou, Eric,
+
+\begin{quote}
+``The breakthrough of Black Scholes (1973) was to realize that the expected return of the option price should be the risk free rate and that by holding a certain amount of stock, now referred to as the delta, the option position could be dynamically completely hedged.''
+\end{quote}
+
+The Black Scholes Model developed in 1973 relates to the pricing of options whose underlying is a stock, said stock is assumed to follow a geometric Brownian motion. This is, given a stock $S_t$, its change can be represented as the following stochastic differential equation.
+
+\begin{equation}
+    dS_t = r dt + \sigma dW_t 
+\end{equation}
+
+In its paper, Rober Black and Myron Scholes introduce a way to hedge the position of an option by holding a certain amount of stocks and investing money at a risk free rate. This is, assuming a portfolio $X(t)$ and the price of the option depend on the stock $C(t)$, what they try to achive is such that the movements in the portfolio is the same as that of the call i.e.
+
+\begin{equation}
+    dX(t) = dC(t)
+\end{equation}
+
+The solution to this last equation yields that famous Black-Scholes-Merton Partial Differential Equation.
+
+\begin{equation}
+    \frac{\partial C}{\partial t} + \frac{1}{2}\sigma^2 S^2 \frac{\partial^2 C}{\partial S^2} + rS\frac{\partial C}{\partial S} - rC = 0  
+\end{equation}\\
+
+
+Solving the Black Scholes PDE yields the analytical formula for pricing a European call option
+
+\begin{equation}
+    C(S_t,  K, \sigma, r, \tau) = S_t \Phi(d_+) - Ke^{-r\tau}\Phi(d_-)
+\end{equation}\\
+
+where
+$$
+    d_{\pm} = \frac{1}{\sigma\sqrt{\tau}}\left[\log\frac{S_t}{K} \pm (r - \frac{\sigma^2}{2})\tau\right]
+$$
+\end{document}
