@@ -1,0 +1,58 @@
+\documentclass{article}
+
+\usepackage{multicol}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+\setlength{\columnseprule}{0.3pt}
+
+
+\begin{document}
+\begin{multicols}{2}
+
+\section*{Econometrics}
+$$x_i = X_i - \bar X$$
+$$y_i = Y_i - \bar Y$$
+$$\varepsilon_i = Y_i - \hat Y_i$$
+
+$$\hat \beta_1 = \frac{\sum_i x_i^2}{\sum_i x_i y_i}$$
+$$\hat \beta_2 = \bar Y - \hat\beta_1 \bar X$$
+
+$$\hat \sigma^2 = \frac{1}{n-2}\sum_i\varepsilon_i^2$$
+$$\mathbb{V}(\beta_1) = \frac{\sum X_i^2}{n\sum x_i^2}$$
+$$\mathbb{V}(\beta_2) = \frac{\sigma^2}{\sum x_i^2}$$
+
+$$se(\beta_i) = \sqrt{\mathbb{V}(\beta_i)}; \ i = \{1, 2\}$$
+
+$$R^2 = \frac{\sum_i(\bar Y_i - \hat Y_i)^2}{\sum_i(Y_i - \hat Y_i)^2}$$
+
+$$\mathbb{P}(\hat \beta_i + |t_{\alpha/2} se(\hat\beta_i)| \leq \beta_i) = 1 - \alpha$$
+$$t = \frac{\hat \beta_i}{se(\beta_i)}$$
+
+$$S_k = \frac{\sum_i \varepsilon_i^3}{n} / \left[\frac{\sum \varepsilon_i^2}{n}\right] ^ {3/2}$$
+$$K_t = \frac{\sum_i \varepsilon_i^4}{n} / \left[\frac{\sum \varepsilon_i^2}{n}\right]^2$$
+$$J.B. = n\left[\frac{S_k^2}{6} + \frac{(K_t - 3)^2}{24}\right]$$
+\end{multicols}
+
+\hfill \break
+
+\subsubsection*{$t$-test}
+For $\beta_i$ at an $\alpha$ level of confidence, 
+
+$H_0: \beta_i = 0$
+
+$H_a: \beta_i \neq 0$
+
+If $t > t_{\alpha/2}$, reject $H_0$
+
+\hfill \break
+
+\subsubsection*{$J.B.$-test}
+To test normality,
+
+$H_0: \varepsilon i \sim N(0, \sigma^2) \ \forall \ i$ 
+
+$H_a: \varepsilon i \not \sim N(0, \sigma^2) \ \forall \ i$
+
+If $J.B. > \chi^2_2(1 - \alpha)$, reject $H_0$
+\end{document}

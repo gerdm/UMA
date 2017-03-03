@@ -23,9 +23,8 @@
 
 
 \begin{document}
-\maketitle
-
 \graphicspath{ {images/} }
+\maketitle
 
 \section{The Context}
 Options play an important role in today’s markets. In its simplest form, a European call (put) option gives the buyer the right, albeit not the obligation, to buy (sell) some underlying at a specified future period at a set price called the strike price.\\
@@ -119,7 +118,26 @@ Assuming there exists a risk free rate, this can be known at various tenors from
     \caption{Curve Interpolation of a ZCB with Known Tenors}
 \end{figure}
 
-Under current market conditions, the existence of a risk free rate is a fallacy. Ever since the aftermath of the credit crisis of 2007, markets have assumed a multicurve paradigm \citep{len}s. No longer are the rates at which one estimates future cash flows are the same as those as used for discounting.
+Under current market conditions, the existence of a risk free rate is a fallacy. Ever since the aftermath of the credit crisis of 2007, markets have assumed a multicurve paradigm \citep{len}. No longer are the rates at which one estimates future cash flows are the same as those as used for discounting.
+
+\section{Thesis Statement}
+The valuation of an option bears within both a solid theoretical foundation, and the realization of evolution in financial markets.\\
+
+To fully grasp the underlying assumptions that brings about the valuation of  options and other financial products requires a review of the fundamental mathematical concepts from which the model is derived. Furthermore, once applied the model under current market conditions it can be seen where it flounders and how is it adjusted.\\
+
+My reason for writing is to merge the mathematical groundworks at a tractable level required to derive the Black-Scholes formula under \textit{risk neutral} probabilities and the adjustments currently made to correctly price a European call Fx option.\\
+
+Some questions to be answered in this paper are:
+\begin{enumerate}
+  \item What is an option?
+  \item What is a Brownian Motion, It\^{o} calculus and It\^{o}'s lemma?
+  \item What's the Black-Scholes Formula and which relation does it hold with the former?
+  \item What is the relationship between the Black-Scholes model and a European call option?
+  \item What is and how is the volatility smile constructed?
+  \item What is the actual rate used to price a European call option and how does one computes it?
+  \item \textbf{How does all the theory and market adjustments are joined in order to currently price an Fx European Call Option?}
+\end{enumerate}
+
 
 \newpage
 \nocite{*}
