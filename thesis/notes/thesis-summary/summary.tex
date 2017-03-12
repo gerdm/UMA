@@ -9,7 +9,7 @@
 \usepackage[numbers]{natbib}
 \bibliographystyle{plainnat}
 
-\title{Theoretical Grounds and Market Adaptations of Financial Fx and Interest Rate Options \\ \large A summary in plain english and some math}
+\title{Theoretical Grounds and Market Adaptations of Financial Fx Options \\ \large A summary in plain english and some math}
 
 \author{Gerardo Dur\'an Mart\'in}
 
@@ -21,23 +21,27 @@
  \citeauthor{#1}(\citeyear{#1})}
 
 
-
 \begin{document}
 \graphicspath{ {images/} }
 \maketitle
 
 \section{The Context}
-Options play an important role in today’s markets. In its simplest form, a European call (put) option gives the buyer the right, albeit not the obligation, to buy (sell) some underlying at a specified future period at a set price called the strike price.\\
 
-Options can trade either Over The Counter or at exchanges such as the Chicago Board Options Exchange or the International Securities Exchange in the U.S.\cite{sec_listed} and Mexder in Mexico \citep{mexder} .\\
+In its simplest form, a European call (put) option gives the buyer the right, albeit not the obligation, to buy (sell) some underlying asset at a specified future period at a set price called the strike price.\\
+
+Options can trade either Over The Counter or at exchanges such as the Chicago Board Options Exchange or the International Securities Exchange in the U.S.\cite{sec_listed} and Mexder in Mexico \citep{mexder}.\\
 
 According to the Bank of International Settlements, the Daily Average Turnover Value (DATV) for exchange traded options was 1,278,571 USD in 2015. Although the current DATV for is not as big as it was at its peak in august 2007, the option markets are still relevant for today's financial needs.
 
-\begin{figure}[h]
+\begin{figure}[h!]
     \centering
     \includegraphics[width=1.0\textwidth]{DAVT}
     \caption{DAVT from 1993 to 2016}
 \end{figure}
+
+Popular as they are, pricing the simplest of them all, sometimes known as \textit{plain vanilla options}, bear within a vast mathematical background that relies on assumptions about the markets in which the options are trading and the behavior of the underlying assets from which their price is derived.\\
+
+Understanding the groundwork required to price these options bring about a better understanding of the strengths and weaknesses of the model. Herein is a brief summary for the work to be written as a thesis.
 
 \section{Theoretical Grounds}
 The pricing theory of options had its first mayor breakthrough after Robert Black and Myron Scholes published a paper in which they derived a formula for a European option theoretical price. As pointed out by \Mycite{pre_bs},
@@ -121,23 +125,9 @@ Assuming there exists a risk free rate, this can be known at various tenors from
 Under current market conditions, the existence of a risk free rate is a fallacy. Ever since the aftermath of the credit crisis of 2007, markets have assumed a multicurve paradigm \citep{len}. No longer are the rates at which one estimates future cash flows are the same as those as used for discounting.
 
 \section{Thesis Statement}
-The valuation of an option bears within both a solid theoretical foundation, and the realization of evolution in financial markets.\\
+As pointed out above, the valuation of an option requires mathematical background in stochastic processes, numerical methods and partial equations in order to price an option under a risk-neutral, free-arbitrage market.\\
 
-To fully grasp the underlying assumptions that brings about the valuation of  options and other financial products requires a review of the fundamental mathematical concepts from which the model is derived. Furthermore, once applied the model under current market conditions it can be seen where it flounders and how is it adjusted.\\
-
-My reason for writing is to merge the mathematical groundworks at a tractable level required to derive the Black-Scholes formula under \textit{risk neutral} probabilities and the adjustments currently made to correctly price a European call Fx option.\\
-
-Some questions to be answered in this paper are:
-\begin{enumerate}
-  \item What is an option?
-  \item What is a Brownian Motion, It\^{o} calculus and It\^{o}'s lemma?
-  \item What's the Black-Scholes Formula and which relation does it hold with the former?
-  \item What is the relationship between the Black-Scholes model and a European call option?
-  \item What is and how is the volatility smile constructed?
-  \item What is the actual rate used to price a European call option and how does one computes it?
-  \item \textbf{How does all the theory and market adjustments are joined in order to currently price an Fx European Call Option?}
-\end{enumerate}
-
+The aim of this work is to develop the mathematical theory under which financial options are priced. We will then question the effectiveness of the model and how can it be adapted to real market constraints. Concretely, we will focus on the calibration of two parameters of the model: its volatility and the \textit{risk-free} interest rate.
 
 \newpage
 \nocite{*}
