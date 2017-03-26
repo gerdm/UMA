@@ -1,0 +1,33 @@
+\documentclass{report}
+
+\usepackage{amsmath}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{tikz}
+
+\title{FX}
+\author{Gerardo Dur\'an Mart\'in}
+
+\begin{document}
+\maketitle
+
+\chapter{Brownian Motion}
+	Let $\{X_j\}_{j\geq 0}$ be a sequence of \textit{i.i.d.} random variables such that $\mathbb{P}(X_j=1) = \mathbb{P}(X_j=-1) = \frac 1 2$ and denote
+	\begin{equation}
+		M_k = \sum_{j=1}^k X_j \ \forall \ k \in \mathbb N; M_0 = 0
+	\end{equation}
+	We define $\{X_j\}_{j\geq 0}$ as a symmetric random walk.\\
+	
+	Often times, this process is compared to that of a game of coin tossing between players, $A$ and $B$. For each toss, if heads ($H$) lands, then player $A$ receives \$1 from player $B$, and if tail ($T$) lands, $A$ must pay $B$ \$1. i.e. $X(H)_j = 1$ and $X(T)_j = -1$.\\
+	
+	The random variable $M_k$ is then the amount player $A$ has loss or won up to time $k$. Evidently, $\mathbb E(X_j) = 0$, which means that, in the long run, we expect that neither $A$ or $B$ win any money.\\
+	
+	We can adjust $M_k$ by defining,
+	\begin{equation}
+		W^{n}_t := \frac{1}{\sqrt{n}}M_{nt}
+	\end{equation}
+	
+	Which we will call the scaled symmetric random walk. This process is equivalent to that of a game toss in which, for every second, $n$ tosses are made. Then, at time $t$, $nt$ tosses would have been done.
+	
+\end{document}
