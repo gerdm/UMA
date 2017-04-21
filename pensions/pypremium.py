@@ -100,13 +100,36 @@ class PensionPremium(object):
 
         return children_data
 
+    def bernoulli_convolutions(self, distributions):
+        """
+        Given a set of bernoulli distributions P({0, 1}) = 1,
+        convolute them two by two. If there is only one element,
+        return the distribution
+        """
+        conv_dist = None
+        number_elements = len(distributions)
+        if number_elements > 1:
+            # Convolute the first two elements
+            conv_dist = self.convolution(distributions[0],
+                                         distributions[1])
+            # For-loop will work only if number_elements
+            # is greater than 3
+            for dist in distributions[2:]:
+                # Add dummy zeroes to complete the convolution
+                # computation
+                number_zeros = len(conv_dist) - 2
+                extra_zeros = [0 for i in range(number_zeros)]
+                conv_dist = self.convolution(conv_dist,
+                        dist + extra_zeros)
+                # Remove the added dummy zeros
+                conv_dist = conv_dist[:-number_zeros]
+                
+        else:
+            conv_dist = distributions[0]
+
+        return conv_dist
+
     def convolute_children(self, k_years):
-        # TODO: Fix shit:
-        #       to convolute all of the children, convolute any two
-        #       childs. Afterwards, with the output, convolute the
-        #       output with the probability of alive or dead for a
-        #       third child and so on. Add trailing zeroes for ith child;
-        #       i >= 2, in order to convolute properly
         """
         Return the probability distribution of the convolution
         of livelyhood of children up to (Xi + k) years; where
@@ -118,12 +141,13 @@ class PensionPremium(object):
         for child_data in children_data:
             age, sex, iv_status = child_data
             prob_child = self.prob_x_to_k(age, k_years, sex, iv_status)
-            prob_distribution.append(prob_child)
+            # For each child exists either a probability of
+            # being either alive or dead
+            prob_distribution.append([1 - prob_child, prob_child])
 
-        print(prob_distribution)
-        conv_dist = self.convolution(prob_distribution,
-                                     prob_distribution)
-        return conv_dist
+        prob_convol = self.bernoulli_convolutions(prob_distribution)
+
+        return prob_convol
 
     def annuity_son_pension(self, years, spouse_alive):
         """
@@ -143,3 +167,4 @@ if __name__ == "__main__":
               "x2": ["descendant", 10, "F", False]}
 
     test = PensionPremium(family, 3000, 0.35, 2016)
+    print(test.convolute_children(1))
