@@ -119,11 +119,10 @@ class PensionPremium(object):
                 # computation
                 number_zeros = len(conv_dist) - 2
                 extra_zeros = [0 for i in range(number_zeros)]
-                conv_dist = self.convolution(conv_dist,
-                        dist + extra_zeros)
+                conv_dist = self.convolution(conv_dist, dist + extra_zeros)
                 # Remove the added dummy zeros
                 conv_dist = conv_dist[:-number_zeros]
-                
+
         else:
             conv_dist = distributions[0]
 
@@ -157,7 +156,39 @@ class PensionPremium(object):
         :param years: number of years of expectancy in livelyhood
         :param spouse_alive: whether or not the spouse is alive
         """
-        pass
+        # The probability of having 0, 1, ..., n children alive
+        pension_sum = 0
+        prob_children = self.convolute_children(years)
+        for nsons, pr in enumerate(prob_children):
+            pension_ix = self.pension_amount(nsons, spouse_alive)
+            pension_sum += pr * pension_ix
+
+        return pension_sum
+
+    def find_key_of(self, key):
+        # TODO: Use this function, replace get_children_data
+        #      and recode convolute children
+        """
+        Return the keys of elements that have one given property
+        of the family. key in ["invalid", "spouse", "descendant"]
+        """
+        elements = []
+        for name, data in self.family.items():
+            if data[0] == key:
+                elements.append(name)
+
+        return elements
+
+    # TODO: From the 'find_key_of' method, make a method
+    #       that computes kPx given a list from the dictionary   
+    def pension_sum_element(self, period):
+        """
+        Compute a term of the sum that goes from k=0 to omega - x_j that
+        takes account of the probability of the invalid being alive, the spouse
+        (alive or dead) and the corresponding pensions for each of the children
+        """
+        invalid_data = self.family[self.find_key_of("invalid")[0]]
+        spouse_data = self.family[self.find_key_of("spouse")[0]]
 
 
 if __name__ == "__main__":
@@ -167,4 +198,4 @@ if __name__ == "__main__":
               "x2": ["descendant", 10, "F", False]}
 
     test = PensionPremium(family, 3000, 0.35, 2016)
-    print(test.convolute_children(1))
+    test.pension_sum_element(1)
