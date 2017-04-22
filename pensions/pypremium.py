@@ -25,6 +25,8 @@ class PensionPremium(object):
         self.pmgs = pd.read_excel(self.database,
                                   sheetname="PMG", index_col=0)
         self.V = 1 / (1 + i_rate)
+        self.omega = max(self.Px_table.index)
+        self.youngest = min([self.family[x][1] for x in self.family])
 
     def convolution(self, X, Y):
         """
@@ -188,7 +190,7 @@ class PensionPremium(object):
 
         return kPx
 
-    def pension_sum_element(self, period):
+    def pension_sum_element(self, period, return_elements=False):
         """
         Compute a term of the sum that goes from k=0 to omega - x_j that
         takes account of the probability of the invalid being alive, the spouse
@@ -203,28 +205,52 @@ class PensionPremium(object):
         pension_wife_dead = self.annuity_son_pension(period, False)
         Vk = self.V ** period
 
-        term = invalid_prob * (spouse_prob * pension_wife_alive + \
-                (1 - spouse_prob) * pension_wife_dead) * Vk
-
-        return term
+        if return_elements is False:
+            term = invalid_prob * (spouse_prob * pension_wife_alive + \
+                    (1 - spouse_prob) * pension_wife_dead) * Vk
+            return term
+        
+        else:
+            return [invalid_prob, spouse_prob, pension_wife_alive,
+                    pension_wife_dead, Vk]
 
     def compute_premium(self):
         """
         Compute the premium to pay in order to insure the
         pensioner the rest of his life
         """
-        omega = max(self.Px_table.index)
-        youngest = min([self.family[x][1] for x in self.family])
-
         # The anticipated, monthly, and certain annuity
         annuity = (1 - self.V) / (1 + (1 + self.i_rate) ** (-1 / 12))
-
         premium = 0
-        for k in range(omega - youngest):
+        
+        for k in range(self.omega - self.youngest):
             premium += self.pension_sum_element(k)
 
         premium *= annuity
         return premium
+
+    def steps_table(self):
+        """
+        --- just for fun ---
+        return inbetween steps of the computations performed on
+        each iteratiion in order to compute the premium
+        """
+        table = pd.DataFrame()
+        columns = ["Px_inv", "Px_spouse", "b1(i)", "b2(i)", "Vk"]
+        for k in range(self.omega - self.youngest):
+            elements = self.pension_sum_element(k, return_elements=True)
+            convol = self.convolute_children(k)
+
+            for cp in convol:
+                elements.append(cp)
+            table = table.append([elements], ignore_index=True)
+
+        for ix, _ in enumerate(convol):
+            columns.append("P({})".format(ix))
+        table.columns = columns
+
+        table.to_csv("family_steps.csv")
+        
 
 if __name__ == "__main__":
     family = {"X": ["invalid", 50, "M", True],
@@ -232,7 +258,7 @@ if __name__ == "__main__":
               "x1": ["descendant", 20, "M", False],
               "x2": ["descendant", 10, "F", False]}
 
-    test = PensionPremium(family, 3000, 0.035, 2016)
-    premium = test.compute_premium()
+    family_test = PensionPremium(family, 3000, 0.035, 2016)
+    premium = family_test.compute_premium()
     print(premium)
 
