@@ -26,7 +26,25 @@ class PensionPremium(object):
                                   sheetname="PMG", index_col=0)
         self.V = 1 / (1 + i_rate)
         self.omega = max(self.Px_table.index)
-        self.youngest = min([self.family[x][1] for x in self.family])
+        self.youngest = self.get_youngest()
+
+    def get_youngest(self):
+        """
+        Retrieve the age of the youngest
+        descendant. If there are no descendants, 
+        return 0
+        """
+        ages = []
+        for memeber in self.family:
+            status = self.family[memeber][0]
+            age = self.family[memeber][1]
+            if status is "descendant":
+                ages.append(age)
+
+        if len(ages) == 0:
+            return 0
+        else:
+            return min(ages)
 
     def convolution(self, X, Y):
         """
@@ -126,16 +144,21 @@ class PensionPremium(object):
         """
         prob_distribution = []
         children_data = self.find_key_of("descendant")
-        children_data = [self.family[membr] for membr in children_data]
-        for child_data in children_data:
-            prob_child = self.member_prob_x_to_k(child_data, k_years)
-            # For each child exists either a probability of
-            # being either alive or dead
-            prob_distribution.append([1 - prob_child, prob_child])
 
-        prob_convol = self.bernoulli_convolutions(prob_distribution)
+        if len(children_data) > 0:
+            children_data = [self.family[membr] for membr in children_data]
+            for child_data in children_data:
+                prob_child = self.member_prob_x_to_k(child_data, k_years)
+                # For each child exists either a probability of
+                # being either alive or dead
+                prob_distribution.append([1 - prob_child, prob_child])
 
-        return prob_convol
+            prob_convol = self.bernoulli_convolutions(prob_distribution)
+
+            return prob_convol
+
+        else:
+            return [1]
 
     def annuity_son_pension(self, years, spouse_alive):
         """
@@ -237,6 +260,7 @@ class PensionPremium(object):
         """
         table = pd.DataFrame()
         columns = ["Px_inv", "Px_spouse", "b1(i)", "b2(i)", "Vk"]
+
         for k in range(self.omega - self.youngest):
             elements = self.pension_sum_element(k, return_elements=True)
             convol = self.convolute_children(k)
@@ -249,16 +273,7 @@ class PensionPremium(object):
             columns.append("P({})".format(ix))
         table.columns = columns
 
-        table.to_csv("family_steps.csv")
-        
+        return table
 
 if __name__ == "__main__":
-    family = {"X": ["invalid", 50, "M", True],
-              "Y": ["spouse", 45, "F", False],
-              "x1": ["descendant", 20, "M", False],
-              "x2": ["descendant", 10, "F", False]}
-
-    family_test = PensionPremium(family, 3000, 0.035, 2016)
-    premium = family_test.compute_premium()
-    print(premium)
-
+    pass
