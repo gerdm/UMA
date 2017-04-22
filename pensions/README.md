@@ -19,7 +19,7 @@ The input is a python Dictionary of the form:
  "name2": ["spouse", age, "F"/"M", False],
  "name3": ["descendant", age, "F"/"M", False],
   ...,
- "namen": [family_status, age, sex, Invalid? (T/F)]}
+ "namen": [family_status, age, sex, Invalid (T/F)]}
 ```
 
 Two of the main methods for the class ``PensionPremium`` are:
