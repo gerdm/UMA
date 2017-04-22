@@ -87,19 +87,6 @@ class PensionPremium(object):
             probs = self.Px_table.ix[x: x + (k - 1), col_map]
             return np.prod(probs)
 
-    def get_children_data(self):
-        """
-        Return a list with tuples of (age, sex, status)
-        for each children in the family
-        """
-        children_data = []
-        for member in self.family:
-            member_elements = self.family[member]
-            if member_elements[0] is "descendant":
-                children_data.append(tuple(member_elements[1:]))
-
-        return children_data
-
     def bernoulli_convolutions(self, distributions):
         """
         Given a set of bernoulli distributions P({0, 1}) = 1,
@@ -136,10 +123,10 @@ class PensionPremium(object):
         :param k_years: number of ages to live
         """
         prob_distribution = []
-        children_data = self.get_children_data()
+        children_data = self.find_key_of("descendant")
+        children_data = [self.family[membr] for membr in children_data]
         for child_data in children_data:
-            age, sex, iv_status = child_data
-            prob_child = self.prob_x_to_k(age, k_years, sex, iv_status)
+            prob_child = self.member_prob_x_to_k(child_data, k_years)
             # For each child exists either a probability of
             # being either alive or dead
             prob_distribution.append([1 - prob_child, prob_child])
@@ -179,8 +166,28 @@ class PensionPremium(object):
 
         return elements
 
-    # TODO: From the 'find_key_of' method, make a method
-    #       that computes kPx given a list from the dictionary   
+    def member_prob_x_to_k(self, member_data, limit):
+        member, age, sex, invalid = member_data
+
+        kPx = 1
+        # If a descendant is not invalid, then the pension stops paying once
+        # he has gotten to age 24, since it can receive, at most, 25 payments
+        # and the annuity is payed upfront
+        if (member is "descendant") and (invalid is False) and (age + limit >= 25):
+            kPx = 0
+        # If it is not a descendant and invalid, the mortality table ends at 100, thus he can
+        # only get payed up to 100 times, which accounts to 99 payments
+        elif (member is not "descendant") and (invalid is True) and (age + limit >=100):
+            kPx = 0
+        # If it is not a descendant and NOT invalid, the mortality table ends at 110, thus he can
+        # only get payed up to 109 times, which accounts to 109 payments
+        elif (member is not "descendant") and (invalid is False) and (age + limit >=110):
+            kPx = 0
+    
+        kPx *= self.prob_x_to_k(age, limit, sex, invalid)
+
+        return kPx
+
     def pension_sum_element(self, period):
         """
         Compute a term of the sum that goes from k=0 to omega - x_j that
@@ -190,6 +197,34 @@ class PensionPremium(object):
         invalid_data = self.family[self.find_key_of("invalid")[0]]
         spouse_data = self.family[self.find_key_of("spouse")[0]]
 
+        invalid_prob = self.member_prob_x_to_k(invalid_data, period)
+        spouse_prob = self.member_prob_x_to_k(spouse_data, period)
+        pension_wife_alive = self.annuity_son_pension(period, True)
+        pension_wife_dead = self.annuity_son_pension(period, False)
+        Vk = self.V ** period
+
+        term = invalid_prob * (spouse_prob * pension_wife_alive + \
+                (1 - spouse_prob) * pension_wife_dead) * Vk
+
+        return term
+
+    def compute_premium(self):
+        """
+        Compute the premium to pay in order to insure the
+        pensioner the rest of his life
+        """
+        omega = max(self.Px_table.index)
+        youngest = min([self.family[x][1] for x in self.family])
+
+        # The anticipated, monthly, and certain annuity
+        annuity = (1 - self.V) / (1 + (1 + self.i_rate) ** (-1 / 12))
+
+        premium = 0
+        for k in range(omega - youngest):
+            premium += self.pension_sum_element(k)
+
+        premium *= annuity
+        return premium
 
 if __name__ == "__main__":
     family = {"X": ["invalid", 50, "M", True],
@@ -197,5 +232,7 @@ if __name__ == "__main__":
               "x1": ["descendant", 20, "M", False],
               "x2": ["descendant", 10, "F", False]}
 
-    test = PensionPremium(family, 3000, 0.35, 2016)
-    test.pension_sum_element(1)
+    test = PensionPremium(family, 3000, 0.035, 2016)
+    premium = test.compute_premium()
+    print(premium)
+
