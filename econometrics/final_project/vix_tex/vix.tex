@@ -21,6 +21,9 @@ According to the Chicago Board Option Exchange (CBOE),
 	\caption{VIX Sample Dataset}
 \end{figure*}
 
+The goal of this narrow essay is to show the basic ideas about how one goes about choosing the parameters for fitting an ARIMA model. This is not intended to be a comprehensive writing about ARIMA, so much as it is about how to apply on a first instance these kinds of models.\\
+
+Herein we will present an example of fitting an ARIMA model to the VIX index, from the point of view of a trader interested in predicting volatility. Understanding volatility allows one to understand more about the risk associated in some trades and the market conditions at a given point in time. To understand how volatile one market is, one can quantify the potential losses to occur.
 
 \section{Predicting the VIX}
 The sample of the VIX we will be working on goes from the first of April, 2010, and ends at the eighteen of may, 2017.\\
@@ -68,15 +71,22 @@ To continue this analysis we set out to plot the partial correlation function an
 	\centering
 	\includegraphics[scale=0.4]{../images/pacf}
 	\caption{Partial Autocorrelation Function}
+	\label{fig:pac}
 \end{figure*}
 
 \begin{figure*}[h]
 	\centering
 	\includegraphics[scale=0.4]{../images/acf}
 	\caption{Autocorrelation Function}
+	\label{fig:ac}
 \end{figure*}
 
-Looking at figures
+Looking at figures \ref{fig:pac} and \ref{fig:ac} we can start trying to fit our ARIMA model by way of trial and error. In this case, a AR(1) I(0) MA(0) was the model whose parameters best suited our model.
+
+\newpage
+
+We can explain the latter result as follows: due the behavior of the VIX, we cannot express the process to take a random walk, that is the reason of I(0). Furthermore, the process does seem to have an autoregressive factor, and that is why we chose to fit AR(1). Finally, since the model does not seem to have a moving average component, we fit a MA(0), which gave significant coefficients in the model.\\
+
 \begin{figure*}[h]
 \centering
 \begin{BVerbatim}[fontsize=\tiny]
@@ -103,5 +113,16 @@ AR.1            1.0407             0.0000           1.0407             0.0000
 \end{BVerbatim}
 \end{figure*}
 
+The Jarque-Bera test was used to asses normality. The test were conclusive, the residuals did not appear to distribute normally. The distribution of the residuals seemed to be platykurtic thus breaking the assumption of normality in the data.
 
+\newpage
+
+\begin{figure*}[h]
+	\centering
+	\includegraphics[scale=0.4]{../images/resid_dist}
+	\caption{Distribution of Residuals}
+\end{figure*}
+
+
+Nonetheless, to have residuals with thinner tails than a normal distribution is positive for the purposes of the model since this implies less uncertainty about the model we are fitting. A better way to approximate model could be to model the residuals with a distribution such that has less variance than a normal distribution.
 \end{document}
