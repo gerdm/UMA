@@ -41,5 +41,5 @@ def iterate_simul(i):
     plt.legend()
 
 anim = animation.FuncAnimation(fig, iterate_simul, frames=nsteps, blit=False)
-anim.save("rwalk.gif", fps=60,  writer="imagemagick")
+#anim.save("rwalk.gif", fps=60,  writer="imagemagick")
 plt.show()
