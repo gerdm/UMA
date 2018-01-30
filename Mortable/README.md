@@ -8,7 +8,7 @@ The project includes a terminal application which, at the moment:
   * Approximates the table using the Makeham model and plots the results.
 
 
-![Plot function](https://dl.dropboxusercontent.com/u/7577384/public/figure_1.png)
+![Plot function](https://i.imgur.com/0g0KNu0.png)
 
 ## Further Notes
 This project is intented to be used as an educational tool in the quick analisys of poblational data to observe behaviors compute tables and, in the future, calculate therical premiums, insurances, payments, reserves, etc. given a table. Feel free to fork and suggest.
