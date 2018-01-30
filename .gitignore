@@ -1,6 +1,7 @@
 # Python-IPython files
 __pycache__
 .ipynb_checkpoints
+.idea
 
 # Python files
 *.swp
